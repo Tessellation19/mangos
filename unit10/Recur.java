@@ -2,6 +2,13 @@ package unit10;
 
 public class Recur {
 
+    public static void potato(int n) {
+        System.out.println("called potato("+n+")");
+        if(n/10!=0){
+            potato(n/10);
+        }
+        System.out.println("exited potato("+n+")");
+    }
     public static int fun3(int n) {
         if (n == 0)
             return 1;
