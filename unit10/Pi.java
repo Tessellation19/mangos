@@ -1,28 +1,26 @@
 package unit10;
 
 public class Pi {
-    static int den;
-
-    public static double piDay(double n, boolean subtract) {
-        den = 1;
-        if (den == 501) {
+    static double n;
+    public static double piDay(double den, boolean subtract) {
+        if (den == 7) {
             return n;
         }
-        if (subtract = true) {
+        if (subtract = true){
             n -= 4 / den;
             den += 2;
-            piDay(n, false);
+            piDay(den, false);
         }
         if (subtract = false) {
             n += 4 / den;
             den += 2;
-            piDay(n, true);
+            piDay(den, true);
         }
         return n;
     }
 
     public static void main(String args[]) {
-        double pi = piDay(1, false);
+        double pi = piDay(1, true);
         System.out.println("pi = " + pi);
     }
 }
