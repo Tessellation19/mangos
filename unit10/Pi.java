@@ -3,7 +3,7 @@ package unit10;
 public class Pi {
     static double n;
     public static double piDay(double den, boolean subtract) {
-        if (den == 7) {
+        if (den == 1001) {
             return n;
         }
         if (subtract = true){

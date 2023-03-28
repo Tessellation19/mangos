@@ -78,13 +78,8 @@ public class Scramble {
      * 
      * @param arr array of integers to shuffle
      */
-    public static void shuffle(int arr[], int num) {
-        int p = arr.length;
-        int f = arr[p-num];
-        arr[p-num] = arr[1];
-        arr[1] = f;
-        num++;
-        shuffle(arr, p);
+    public static void shuffle(int arr[]) {
+       
         
     }
 
