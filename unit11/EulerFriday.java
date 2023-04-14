@@ -1,4 +1,7 @@
 package unit11;
+import unit10.Recur;
+
+import java.net.SocketPermission;
 
 public class EulerFriday {
 
@@ -25,6 +28,40 @@ public class EulerFriday {
             
         }
         System.out.println(sum);
+
+        //q3
+        long factorMe = 600851475143l;
+        int factor = 2;
+        while(factorMe>=factor){
+            if(factorMe%factor == 0){
+                factorMe /= factor;
+            }
+            else{
+                factor++;
+            }
+        }
+        System.out.println(factor);
+
+        //q4
+        int largest = 0;
+        for(int i = 100; i<999; i++){
+            for(int u = 100; a<999; a++){
+                int product = i*u;
+                String productS = Integer.toString(product);
+                if(Recur.pot(productS)==true){
+                    if(product>largest){
+                        largest = product;
+                    }
+                }
+            }
+        }
+        System.out.println(largest);
+
+        //q5
+        for(int i = 1; i<=10; i++){
+            
+        }
+
     }
 
     static int[] prob8scaffold() {
@@ -61,4 +98,16 @@ public class EulerFriday {
         return nums;
     }
 
+
+    public int GCD(int a, int b){
+        if(a%b == 0){
+            return b;
+        }
+        else{
+            return GCD(b, a%b)
+        }
+    }
+    public int LCM(int a, int b){
+        return a*b/GCD(a,b);
+    }
 }
