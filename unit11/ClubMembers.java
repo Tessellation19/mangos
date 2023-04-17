@@ -43,12 +43,20 @@ public class ClubMembers {
     }
 
     public void addMembers(String[] names, int gradYear) {
-        // TODO a
-
+        int i = 0;
+        while(i<names.length){
+            MemberInfo member = new MemberInfo(names[i], gradYear, true);
+            members.add(member);
+        }
     }
 
     public ArrayList<MemberInfo> removeMembers(int year) {
-        // TODO b;
+        int i =0;
+        while(i<members.size()){
+            if(members.get(i).getGradYear() == year){
+                members.remove(i);
+            }
+        }
         return null; // replace me
     }
 

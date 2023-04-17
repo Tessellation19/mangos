@@ -1,7 +1,7 @@
 package unit11;
 
 // 2018 FRQ #2
-// https://secure-media.collegeboard.org/apc/ap18-frq-computer-science-a.pdf#page=7
+// https://secure-media.collegeboard.org/apc/ap18-frq-computer-science-a.pdf#page=7 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -39,15 +39,30 @@ public class WordPairList {
      * Precondition: words.length >= 2
      */
     public WordPairList(String[] words) {
+        allPairs = new ArrayList<WordPair>();
         /* to be implemented in part (a) */
+        for(int i = 0; i<words.length - 1; i++){
+            for(int j = i+1; j<words.length; j++){
+                WordPair pair = new WordPair(words[i], words[j]);
+                allPairs.add(pair);
+            }
+        }
     }
 
     /**
      * Returns the number of matches as described in part (b).
      */
     public int numMatches() {
-        /* to be implemented in part (b) */
-        return -1; // replace me!
+        int i = 0;
+        int sum = 0;
+        while(i<allPairs.size()){
+            if(allPairs.get(i).getFirst().equals(allPairs.get(i).getSecond())){
+                sum++;
+            }
+            i++;
+        }
+        System.out.println(sum);
+        return sum; // replace me!
     }
 
     public static void check(boolean test) throws AssertionError {
