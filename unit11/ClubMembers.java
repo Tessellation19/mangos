@@ -56,8 +56,9 @@ public class ClubMembers {
             if(members.get(i).getGradYear() == year){
                 members.remove(i);
             }
+            i++;
         }
-        return null; // replace me
+        return members; // replace me
     }
 
     public static void check(boolean test) throws AssertionError {
