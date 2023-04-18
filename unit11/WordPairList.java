@@ -61,7 +61,6 @@ public class WordPairList {
             }
             i++;
         }
-        System.out.println(sum);
         return sum; // replace me!
     }
 

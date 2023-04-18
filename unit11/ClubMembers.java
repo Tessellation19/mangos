@@ -51,14 +51,18 @@ public class ClubMembers {
     }
 
     public ArrayList<MemberInfo> removeMembers(int year) {
+        ArrayList<MemberInfo> gradGoodMembers = new ArrayList<MemberInfo>();
         int i =0;
         while(i<members.size()){
             if(members.get(i).getGradYear() == year){
+                if(members.get(i).inGoodStanding()){
+                    gradGoodMembers.add(members.get(i));
+                }
                 members.remove(i);
             }
             i++;
         }
-        return members; // replace me
+        return gradGoodMembers; // replace me
     }
 
     public static void check(boolean test) throws AssertionError {
