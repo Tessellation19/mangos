@@ -13,6 +13,14 @@ class Vehicle {
 }
 
 // Code me! bikes have 2 wheels
-public class Bike {
+public class Bike extends Vehicle{
+    public Bike(){
+        super(2);
+    }
+    public static void main(String args[]){
+        Bike bike = new Bike();
+        
+    }
 
 }
+
