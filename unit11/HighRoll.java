@@ -1,9 +1,10 @@
 package unit11;
 public class HighRoll{
-    int playerOne;
-    int playerTwo;
-    int scoreOne;
-    int scoreTwo;
+    int playerOne = 0;
+    int playerTwo = 0;
+    int scoreOne = 0;
+    int scoreTwo = 0;
+    static String winner;
     public void roll(){
         scoreOne = ((int) (Math.random()*6)) + ((int) (Math.random()*6)) + ((int) (Math.random()*6));
         scoreTwo = ((int)(Math.random()*6)) + ((int) (Math.random()*6)) + ((int) (Math.random()*6));
@@ -25,16 +26,19 @@ public class HighRoll{
             // System.out.println(playerTwo);
             // System.out.println();
         }
-        if(playerOne > 50){
-            System.out.println("Player One Wins");
+        if(playerOne >= 50 && playerTwo < 50){
+            // System.out.println("Player One Wins");
+            winner = "One";
         }
-        else if(playerTwo > 50){
-            System.out.println("Player Two Wins");
+        if(playerTwo >= 50 && playerOne < 50){
+            // System.out.println("Player Two Wins");
+            winner = "Two";
         }
+        System.out.println(winner);
     }
     
     public static void main (String args[]){
         HighRoll game = new HighRoll();
         game.turns();
-    }
+}
 }

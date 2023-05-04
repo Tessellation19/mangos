@@ -1,15 +1,15 @@
 package unit11;
-
 public class Mexico {
     int playerOne = 6;
     int playerTwo = 6;
     int roleOne = 0;
     int roleTwo = 0;
+    
     public void roll(){
         roleOne = ((int)(Math.random()*playerOne)) + ((int)(Math.random()*playerOne));
         roleTwo = ((int)(Math.random()*playerTwo)) + ((int)(Math.random()*playerTwo));
-        System.out.println(roleOne);
-        System.out.println(roleTwo);
+        // System.out.println(roleOne);
+        // System.out.println(roleTwo);
     }
     
 public void play(){
@@ -17,11 +17,11 @@ public void play(){
         roll();
         if(roleOne > roleTwo){
             playerTwo -= 1;
-            System.out.println("two"+playerTwo);
+            // System.out.println("two "+playerTwo);
         }
         if(roleTwo > roleOne){
             playerOne -= 1;
-            System.out.println("one"+playerOne);
+            // System.out.println("one "+playerOne);
         }
     }
     if(playerOne > 0){
@@ -30,5 +30,9 @@ public void play(){
     if(playerTwo > 0){
         System.out.println("Player Two Wins");
     }
+}
+public static void main(String args[]){
+    Mexico game = new Mexico();
+    game.play();
 }
 }
