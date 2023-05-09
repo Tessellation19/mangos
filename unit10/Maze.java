@@ -16,7 +16,14 @@ public class Maze {
      */
     public Maze(int rows, int cols, String line) {
         // TODO part a
-
+        maze = new char[rows][cols];
+        int spot = 0;
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                maze[r][c] = line.charAt(spot);
+                spot++;
+            }
+        }
     }
 
     /**
@@ -52,8 +59,25 @@ public class Maze {
      * @param r current row index
      * @param c current column index
      */
+    public boolean isInBounds(int rw, int cl){
+        boolean out = false;
+        if(!(rw<0 || rw>=maze.length)&&!(cl<0 || cl>=maze[rw].length)){
+            out = true;
+        }
+        return out;
+    }
     private void check(int r, int c) {
-        // TODO part b
+        if(maze[r][c] != '#'&& isInBounds(r, c)){
+            if(maze[r][c]=='$'){
+                solution=true;
+            }
+            else if(maze[r][c]=='.'){
+                check(r+1, c);
+                check(r-1, c);
+                check(r, c+1);
+                check(r, c-1);
+            }
+        }
 
     }
 
@@ -63,8 +87,16 @@ public class Maze {
      * @return true if the maze has a path from Start (@) to End ($).
      */
     public boolean hasSolution() {
-        // TODO part c
-        return false; // replace me!
+        String start = getStart();
+        String end = getEnd(); 
+        char startR = start.charAt(0);
+        char startC = start.charAt(2);
+        int startRow = Character.getNumericValue(startR);
+        int startCol = Character.getNumericValue(startC);
+        System.out.println(startRow+""+startCol);
+        check(startRow, startCol);
+        
+        return solution; // replace me!
 
     }
 
