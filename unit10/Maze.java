@@ -66,20 +66,32 @@ public class Maze {
         }
         return out;
     }
-    private void check(int r, int c) {
-        if(maze[r][c] != '#'&& isInBounds(r, c)){
+    public boolean isTravelable(int r, int c){
+        if(isInBounds(r, c) && maze[r][c] != '#'&& maze[r][c] != 'v'){
+            return true;
+        }
+        else{return false;}
+    }
+    private void explore(int r, int c) {
             if(maze[r][c]=='$'){
                 solution=true;
             }
-            else if(maze[r][c]=='.'){
-                check(r+1, c);
-                check(r-1, c);
-                check(r, c+1);
-                check(r, c-1);
+            else if(maze[r][c]!= '#'){
+                maze[r][c] = 'v';
+                if(isTravelable(r-1, c)){
+                    explore(r-1,c);
+                }
+                if(isTravelable(r+1, c)){
+                    explore(r+1,c);
+                }
+                if(isTravelable(r, c+1)){
+                    explore(r,c+1);
+                }
+                if(isTravelable(r, c-1)){
+                    explore(r,c-1);
+                }
             }
         }
-
-    }
 
     /**
      * Determines if there is a solution (a path of '.') for this maze.
@@ -94,7 +106,7 @@ public class Maze {
         int startRow = Character.getNumericValue(startR);
         int startCol = Character.getNumericValue(startC);
         System.out.println(startRow+""+startCol);
-        check(startRow, startCol);
+        explore(startRow, startCol);
         
         return solution; // replace me!
 
