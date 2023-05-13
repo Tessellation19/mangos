@@ -15,6 +15,3 @@ The code will play a game of scrabble with you using a 2 dimensional array to re
 1. How to use 2d arrays better
 2. How to use graphics in code
 3. How to write more complicated ifs and fors
-
-
-tools, techniques, technology.
