@@ -18,14 +18,81 @@ public class Scrabble {
     private static ArrayList<Character> bag = new ArrayList<Character>();
     private static boolean turn = false;
     private static String[] words = loadFile("dictionary.txt").split("\n");
+
+
+
+//in progress
+public static int changeTotalScore(int r, int c, String w, char d){
+    
+    return 19;
+}
+public static int changeLetterScore(int r, int c, int s){
+        char a = board[r][c];
+            switch(a){
+                case '@':
+                s*=2;
+                break;
+                case '#':
+                s*=3;
+                break;
+            }
+    return s;
+}
+public static int changeWordScore(int r, int c, int l, int s, char d){
+    char f = '!';
+    if(d == 'v'){
+        for (int i = r; i < l; i++) {
+            f = board[i][c];
+            switch(f){
+                case '&':
+                    s*=3;
+                break;
+                case '#':
+                    s*=2;
+                break;
+            }
+        }
+    }
+    else if(d == 'h'){
+        for (int i = c; i < l; i++) {
+            f = board[r][i];
+            switch(f){
+                case '&':
+                    s*=3;
+                break;
+                case '#':
+                    s*=2;
+                break;
+            }
+        }
+    }
+    else{
+
+    }
+    return s;
+}
 //not sure how to check this...
 public static boolean adjacent(int r, int c, String w){
 
     return true;
 }
+//Not started yet
+public static void computerTurn(){
+    int largest = 0;
+    int cur;
+    String bestWord;
+    String curWord;
+    //for each spot with a letter on it that has space around it
+        //unscramble letters in hand + the letter in spot
+    //if it fits on the board and makes a valid word with adjacent letters then compare its score with the currant largest score
+    //if it is bigger than set largest score to this score, and set best word to this word
+    //play best word
+    //remove letters in best word from hand
+}
+
 
 //Can't tell yet if this works since not all methods used are done
-public static void addWord(String w, int r, char col, String p, String d){
+public static void addWord(String w, int r, char col, String p, char d){
     int c = Character.getNumericValue(col)-10;
     if(isInDict(w)&&isSpotFree(r,c,w.length(),d)&&adjacent(r, c, w)){
         putOnBoard(w, r, c, d);
@@ -41,34 +108,6 @@ public static void addWord(String w, int r, char col, String p, String d){
     }
     
 }
-
-//Not started yet, eventually it will check if the letters are placed on any triples or doubles
-public static int checkPosition(int score){
-    for (char[] b: board){
-        for(char a : b){
-            char c = '%';
-            c:
-            System.out.println("yay");
-            break;
-        }
-    }
-    return 19;
-}
-
-//Not started yet
-public static void computerTurn(){
-    int largest = 0;
-    int cur;
-    String bestWord;
-    String curWord;
-    //for each spot with a letter on it that has space around it
-        //unscramble letters in hand + the letter in spot
-    //if it fits on the board and makes a valid word with adjacent letters then compare its score with the currant largest score
-    //if it is bigger than set largest score to this score, and set best word to this word
-    //play best word
-    //remove letters in best word from hand
-}
-
 
 //This works, though will work better when addWords is done
 public static void playerTurn(){
@@ -147,7 +186,7 @@ public static void playerTurn(){
             bag.add('v');
             bag.add('w');
             bag.add('y');
-            bag.add(' ');
+            bag.add(' '); //DON'T FORGET THIS :((
         }
         bag.add('k');
         bag.add('j');
@@ -186,7 +225,6 @@ public static void playerTurn(){
             }
         }
     }
-  
 //This works!!
 public static int getWordScore(String w){
     int score = 0;
@@ -195,7 +233,6 @@ public static int getWordScore(String w){
     }
     return score;
 }
-
 //So does this!
 public static int convert(char l){
     int out;
@@ -228,7 +265,6 @@ public static int convert(char l){
     }
     return out;
 }
-
 //This works!
 public static String loadFile(String filename) {
     String contents = "";
@@ -243,7 +279,6 @@ public static String loadFile(String filename) {
     }
     return contents;
 }
-
 //Done
 public static void addPoints(int s){
     if(turn){
@@ -253,7 +288,6 @@ public static void addPoints(int s){
         playerScore+=s;
     }
 }
-
 //This Works!!!!
 public static boolean isInDict(String w){
     boolean out = false;
@@ -264,9 +298,9 @@ public static boolean isInDict(String w){
     }
     return out;
 }
-
 //This works!
 public static void buildBoard(){
+    
     for (int i = 0; i < board.length; i++) {
         for (int j = 0; j < board.length; j++) {
             board[i][j] = '^';
@@ -316,16 +350,38 @@ public static void buildBoard(){
     //Center star = %
     board[7][7] = '%';
 }
-
-//This works, but for some reason, when you put vertical in for dir, it says not a legal move,
-//then starts your turn again, but then it works the next time around
-    public static void putOnBoard(String w, int r, int c, String dir){
-        if(dir == "vertical"){
+//This works!!
+public static boolean isSpotFree(int r, int c, int l, char dir){
+    int count = 0;
+    if(dir == 'h'){
+        for (int i = 0; i < l; i++) {
+            if(board[r][c+i]=='^' || board[r][c+i]=='%' || board[r][c+i]=='&' || board[r][c+i]=='*' || board[r][c+i]=='@'||board[r][c+i]=='#'){
+                count++;
+            }
+        }
+    }
+    else if(dir == 'v'){
+        for (int i = 0; i < l; i++) {
+            if(board[r][c+i]=='^' || board[r][c+i]=='%' || board[r][c+i]=='&' || board[r][c+i]=='*' || board[r][c+i]=='@'||board[r][c+i]=='#'){
+                count++;
+            }
+        }
+    }
+    if(count==l){
+        return true;
+    }
+    else{
+    return false;
+    }
+}
+//This works!
+    public static void putOnBoard(String w, int r, int c, char d){
+        if(d == 'v'){
             for (int i = 0; i < w.length(); i++) {
                 board[r+i][c] = w.charAt(i);
             }
         }
-        if(dir == "horizontal"){
+        else if(d == 'h'){
             for (int i = 0; i < w.length(); i++) {
                 board[r][c+i] = w.charAt(i);
             }
@@ -341,33 +397,15 @@ public static void buildBoard(){
         }
         
     }
-
-
-//Checks to see if there is not a char in a spot for a length and a direction - not sure if this works yet
-    public static boolean isSpotFree(int r, int c, int l, String dir){
-        int count = 0;
-        if(dir == "horizontal"){
-            for (int i = 0; i < l; i++) {
-                if(board[r][c+i]=='^'){
-                    count++;
-                }
-            }
-        }
-        else if(dir == "vertical"){
-            for (int i = 0; i < l; i++) {
-                if(board[r+i][c]=='^'){
-                    count++;
-                }
-            }
-        }
-        if(count==l){
-            return true;
-        }
-        else{
-        return true;
+//This works!
+    public static void boardToString(){
+        for (int i = 0; i < board.length; i++) {
+                System.out.println(board[i]);
         }
     }
     
+
+
  
 //Does this work? Haven't checked yet
     public static void removeLetters(String w){
@@ -397,7 +435,7 @@ public static void buildBoard(){
         }
     }
 
-//Don't know how to check this but it should work hopefully...
+//it should work hopefully...
 public static void play(){
         buildBoard();
         makeBag();
@@ -415,20 +453,19 @@ public static void play(){
         System.out.println("Computer" + computerScore);
         boardToString();
         }
-    }
-   
-    public static void boardToString(){
-        for (int i = 0; i < board.length; i++) {
-                System.out.println(board[i]);
+        if(playerScore>computerScore){
+            System.out.println("You win!");
+        }
+        else if(computerScore>=playerScore){
+            System.out.println("You lose!");
+        }
+        else if(computerScore == playerScore){
+            System.out.println("Tis a tie!");
         }
     }
+
     public static void main(String[] args) {
-        buildBoard();
-        boardToString();
-        makeBag();
-        dealHands();
-        System.out.println(playerHand);
-        playerTurn();
+        
         
 
     }
@@ -462,14 +499,7 @@ public static void play(){
  *  take out letters from array
  *  draw new letters
  *  remove new letters from bag
- * 
- * PLAYING AGAINST YOU
- *  Check each spot that has had a piece placed on it
- *  Unscramble letters in hand + letter on board
- *  Check to see if word fits on the board and how many points its worth
- *  if points are larger than largest points, set word to new best word and points to largest points
- *  add best word
-
+ *
  * 
  * TURNS
  * while bag.length >0
