@@ -27,10 +27,18 @@ public class Scrabble {
 
     // Not started
 public static char findDirection(String w, int r, int c){
-    for(int i=r; i<w.length(); i++){
-
+    int s = getWordScore(w);
+    int hs = changeTotalScore(r, c, w, 'h');
+    int vs = changeTotalScore(r,c,w,'v');
+    if(hs>vs){
+        return 'h';
     }
-    return 'a';
+    if(vs>hs){
+        return 'v';
+    }
+    else{
+        return 'h';
+    }
 }
 
     // Not started
@@ -372,14 +380,13 @@ public static char findDirection(String w, int r, int c){
 
     // Haven't checked
     public static char reverseConvert(int c) {
+        char out = '^';
         for (char i = 'a'; i <= 'z'; i++) {
             if (Character.getNumericValue(i) - 10 == c) {
-                return i;
-            } else {
-                return '^';
+                out = i;
             }
         }
-
+        return out;
     }
 
     // Haven't checked
