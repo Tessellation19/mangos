@@ -26,22 +26,6 @@ public class Scrabble {
     }
 
     // Not started
-public static char findDirection(String w, int r, int c){
-    int s = getWordScore(w);
-    int hs = changeTotalScore(r, c, w, 'h');
-    int vs = changeTotalScore(r,c,w,'v');
-    if(hs>vs){
-        return 'h';
-    }
-    if(vs>hs){
-        return 'v';
-    }
-    else{
-        return 'h';
-    }
-}
-
-    // Not started
     public static String unscrambleWord(ArrayList<Character> hand, char a) {
 
         return "a";
@@ -388,6 +372,21 @@ public static char findDirection(String w, int r, int c){
         }
         return out;
     }
+ //needs checking
+ public static char findDirection(String w, int r, int c){
+    int s = getWordScore(w);
+    int hs = changeTotalScore(r, c, w, 'h');
+    int vs = changeTotalScore(r,c,w,'v');
+    if(hs>vs){
+        return 'h';
+    }
+    if(vs>hs){
+        return 'v';
+    }
+    else{
+        return 'h';
+    }
+}
 
     // Haven't checked
     public static void addWord(String w, int r, char col, char d) {
