@@ -17,7 +17,7 @@ public class Scrabble {
     private static ArrayList<Character> computerHand = new ArrayList<Character>();
     private static ArrayList<Character> bag = new ArrayList<Character>();
     private static boolean turn = false;
-    private static String[] words = loadFile("dictionary.txt").split("\n");
+    private static String[] words = loadFile("./unit12/dictionary.txt").split("\n");
 
     // Not started
     public static boolean adjacent(int r, int c, String w) {
@@ -27,7 +27,10 @@ public class Scrabble {
 
     // Not started
     public static String unscrambleWord(ArrayList<Character> hand, char a) {
-
+        hand.add(a);
+        for (int i = 0; i < words.length; i++) {
+            
+        }
         return "a";
     }
 
@@ -196,8 +199,9 @@ public class Scrabble {
     public static boolean isInDict(String w) {
         boolean out = false;
         for (String thing : words) {
-            w: out = true;
-            break;
+            if(w==thing){
+                out = 
+            }
         }
         return out;
     }
@@ -436,8 +440,8 @@ public class Scrabble {
         }
         System.out.println("What direction does your word go? ex. vertical or horizontal");
         direction = s.nextLine();
-
-        addWord(word, row, col, direction);
+        char d = direction.charAt(0);
+        addWord(word, row, col, d);
         removeLetters(word);
         turn = false;
         s.close();
@@ -532,7 +536,7 @@ public class Scrabble {
     }
 
     public static void main(String[] args) {
-        System.out.println(reverseConvert(7));
+        System.out.println(isInDict("safe"));
     }
 }
 
