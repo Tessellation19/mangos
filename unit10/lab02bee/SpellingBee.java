@@ -104,24 +104,24 @@ public class SpellingBee {
         String[] words = loadFile("words_dropped.txt").split("\n");
         System.out.println("Loaded " + words.length + " words");
         //TODO solve me!
-        SpellingBee bee = new SpellingBee("ranglty".toCharArray(), 'y');
+        SpellingBee bee = new SpellingBee("eybpoga".toCharArray(), 'a');
         for(int i = 0; i<words.length; i++){
             if(checkWord(words[i])){
                 System.out.println(words[i]);
             }
         }
         //TODO sort words!
-        mergeSort(words, words.length);
-        //TODO what position in the sorted list is the word "search" ?
-        boolean yay = false;
-        for(int i = 0; i<words.length; i++){
-            if(words[i].equals("search")){
-                System.out.println(i);
-                yay = true;
-            }
-        }
-        if(yay == false){
-            System.out.println("Search does not exist in this array");
-        }
+        // mergeSort(words, words.length);
+        // //TODO what position in the sorted list is the word "search" ?
+        // boolean yay = false;
+        // for(int i = 0; i<words.length; i++){
+        //     if(words[i].equals("search")){
+        //         System.out.println(i);
+        //         yay = true;
+        //     }
+        // }
+        // if(yay == false){
+        //     System.out.println("Search does not exist in this array");
+        // }
     }
 }

@@ -1,4 +1,0 @@
-Data Ethics
-    In this day and age, the internet is still a fairly new uncharted technology. When considering the Ethics behind AI, we forget the essential question. Should there be government regulations on the internet and how would that work? In considering Data Ethics we first have to ask who can regulate technology. The first entitiy that comes to mind is the United Nations. They would have the power to regulate the internet in many countries, but not all. An national government could also regulate websites and technologies, but with the use of VPNs people could easily get around these laws. Additionally, a national government cannot regulate technolies made in other countries, and regulating technologies in their own country could give them a disadvantage when competing with other countries.
-
-    NOT DONE YET
