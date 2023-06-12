@@ -9,19 +9,31 @@ import java.util.Scanner;
 import java.util.stream.BaseStream;
 import java.util.ArrayList;
 /*TODO
+ * FIRST IS FIX DOUBLE LETTER ISSUE 
+ * it keeps picking horizontal
+ * is spot free isn't working
+ * 
+ * If the word is too long to fit in the spot, 
+ * find a way to find another word that will work 
+ * without creating an infinite loop
+ * 
  * Write Adjacent method
- * Fix double letter issue
  * Write a code to see if the word you pick uses characters from your hand or not
+ * Write starting rule (must be at h7) into code
+ *
  * make a map and make sure code follows said map
  * make it pretty
- */
+ *  - add indexies on the outside rings
+ *  */
 public class Scrabble {
     private static char[][] board = new char[15][15];
     private static String nah = "This is not a legal move";
     private static int playerScore = 0;
     private static int computerScore = 0;
+    private static int playerTwoScore = 0;
     private static ArrayList<Character> playerHand = new ArrayList<Character>();
     private static ArrayList<Character> computerHand = new ArrayList<Character>();
+    private static ArrayList<Character> playerTwoHand = new ArrayList<Character>();
     private static ArrayList<Character> bag = new ArrayList<Character>();
     private static boolean turn = false;
     private static String[] words = loadFile("./unit12/dictionary.txt").split("\n");
@@ -99,7 +111,7 @@ public class Scrabble {
         }
         for (int i = 0; i < 7; i++) {
             index = (int) (Math.random() * bag.size());
-            computerHand.add(bag.get(index));
+            playerTwoHand.add(bag.get(index));
             bag.remove(index);
         }
     }
@@ -109,7 +121,7 @@ public class Scrabble {
         if (turn) {
             for (int i = 0; i < a; i++) {
                 int index = (int) (Math.random() * bag.size() - 1);
-                computerHand.add(bag.get(index));
+                playerTwoHand.add(bag.get(index));
                 bag.remove(index);
             }
         } else if (!turn) {
@@ -193,14 +205,13 @@ public class Scrabble {
             // } catch (URISyntaxException e) {
             // e.printStackTrace();
         }
-        //System.out.println("loaded:" + contents.length());
         return contents;
     }
 
     //adds points s to whomevers turn it is
     public static void addPoints(int s) {
         if (turn) {
-            computerScore += s;
+            playerTwoScore += s;
         } else {
             playerScore += s;
         }
@@ -270,7 +281,7 @@ public class Scrabble {
         board[7][7] = '%';
     }
 
-    // i think this works
+    //this does not work
     public static boolean isSpotFree(int r, int c, int l, char dir) {
         int count = 0;
             if (dir == 'h') {
@@ -304,6 +315,7 @@ public class Scrabble {
     //puts a word on the board at row r, column c, and in dirrection d
     public static void putOnBoard(String w, int r, int c, char d) {
         if (d == 'v') {
+            
             for (int i = 0; i < w.length(); i++) {
                 board[r + i][c] = w.charAt(i);
             }
@@ -313,7 +325,7 @@ public class Scrabble {
             }
         } else {
             if (turn) {
-                computerTurn();
+                playerTwoTurn();
             } else {
                 System.out.println(nah);
                 playerTurn();
@@ -336,24 +348,10 @@ public class Scrabble {
             word.add(w.charAt(i));
         }
         if (!turn) {
-            for (int i = playerHand.size() - 1; i >= 0; i--) {
-                for (int j = word.size() -1 ; j >= 0; j--) {
-                    if (playerHand.get(i).equals(word.get(j))) {
-                        playerHand.remove(i);
-                        word.remove(j);
-                    }
-                }
-            }
+            playerHand.removeAll(word);
         }
         if (turn) {
-            for (int i = 6; i >= 0; i--) {
-                for (int j = word.size() - 1; j >= 0; j--) {
-                    if (computerHand.get(i).equals(word.get(j))) {
-                        computerHand.remove(i);
-                        word.remove(j);
-                    }
-                }
-            }
+            playerTwoHand.removeAll(word);
         }
     }
 
@@ -411,12 +409,12 @@ public class Scrabble {
     //adds a word to the board, as well as checking if it is in the dictionary and the spot is available. If not it restarts whomevers turn it is
     public static void addWord(String w, int r, char col, char d) {
         int c = Character.getNumericValue(col) - 10;
-        if (isInDict(w) && isSpotFree(r, c, w.length(), d)) {
+        if (isLegal(w, r, c, d)) {
             putOnBoard(w, r, c, d);
             removeLetters(w);
         } else if (turn) {
-            computerTurn();
-        } else {
+            playerTwoTurn();
+        } else if(!turn) {
             System.out.println(nah);
             playerTurn();
         }
@@ -432,7 +430,7 @@ public class Scrabble {
         int row;
         char col;
         System.out.println("It is now your turn");
-        System.out.println("Here are your tiles" + playerHand);
+        System.out.println("Here are your tiles " + playerHand);
         System.out.println("What word would you like to play?");
         word = s.nextLine();
         System.out.println("Where would you like to place the first letter of the word? Ex. h11");
@@ -454,13 +452,22 @@ public class Scrabble {
             System.out.println(nah);
             playerTurn();
         }
+        int c = Character.getNumericValue(col)-10;
         System.out.println("What direction does your word go? Ex. v (for vertical) or h (for horizontal)");
         direction = s.nextLine();
         char d = direction.charAt(0);
-        addWord(word, row, col, d);
-        removeLetters(word);
+        if(isLegal(word, row, c, d)){
+            putOnBoard(word, row, c, d);
+            removeLetters(word);
+            drawLetters(word.length());
+        }
+        else{
+            row = 0;
+            col = 0;
+            System.out.println(nah);
+            playerTurn();
+        }
         turn = false;
-        s.close();
     }
 
     // haven't checked yet
@@ -531,13 +538,11 @@ public class Scrabble {
         String curWord;
         int bestRow = 0;
         int bestCol = 0;
-        for (int r = 0; r < 15; r++) {
-            for (int c = 0; c < 15; c++) {
-                if(board[r][c] != '^' && board[r][c] != '&' &&board[r][c] != '*' &&board[r][c] != '@' &&board[r][c] != '#'){
-                    curWord = unscrambleWord(computerHand, board[r][c]);
-                    if (isInDict(curWord)
-                            && (isSpotFree(r, c, curWord.length(), 'v') || isSpotFree(r, c, curWord.length(), 'h'))
-                            && adjacent(r, c, curWord) && getWordScore(curWord) > getWordScore(bestWord)) {
+            for(int r=board.length-1; r>=0; r--){
+                for(int c = board[r].length-1; c>=0; c--){
+                if(Character.getNumericValue(board[r][c])>=10 && Character.getNumericValue(board[r][c])<=35 ){
+                    curWord = unscrambleWord(computerHand, board[r][c],r,c);
+                    if(isLegal(curWord, r, c, 'h') || isLegal(curWord, r, c, 'v')){
                         bestWord = curWord;
                         bestRow = r;
                         bestCol = c;
@@ -545,51 +550,172 @@ public class Scrabble {
                 }
             }
         }
+        System.out.println(computerHand);
+        System.out.println(bestWord);
         char dir = findDirection(bestWord, bestRow, bestCol);
-        char besCol = reverseConvert(bestCol);
-        addWord(bestWord, bestRow, besCol, dir);
-        removeLetters(bestWord);
+        if (isLegal(bestWord, bestRow, bestCol, dir)) {
+            putOnBoard(bestWord, bestRow, bestCol, dir);
+            removeLetters(bestWord);
+            drawLetters(bestWord.length());
+        }
+        else{
+            System.out.println("There are no possible solutions, the computer will now skip its turn");
+        }
     }
-
+    public static boolean isLegal(String word, int row, int col, char dir){
+        if(isInDict(word) && isSpotFree(row, col, word.length(), dir) && adjacent(row, col, word) && ((dir == 'v' && row+word.length()<board.length)||(dir == 'h' && col+word.length()<board[row].length))){
+            return true;
+        }
+        else{return false;}
+    }
     // need to figure out how to get words without double letters
-    public static String unscrambleWord(ArrayList<Character> hand, char a) {
+    public static String unscrambleWord(ArrayList<Character> hand, char a, int r, int c) {
         ArrayList<String> potential = new ArrayList<String>();
         String currantWord = " ";
+        hand.add(a);
+        hand = sortAlphabetical(hand);
+        System.out.println(hand);
+        //System.out.println(hand.size());
         // for each word in the dictionary
-        //System.out.println(hand);
         for (int i = 0; i < words.length; i++) {
-            currantWord = words[i];
-            int c = 0;
-            // for each letter in the currant word
+            ArrayList<Character> tempHand = new ArrayList<Character>();
             for (int j = 0; j < hand.size(); j++) {
-                // loop through letters in hand
-                for (int k = 0; k < currantWord.length(); k++) {
-                    // count how many letters in the hand are the same as the letters in the word
-                    if (currantWord.charAt(k) == hand.get(j)) {
-                        c++;
-                    }
+                tempHand.add(hand.get(j));
+            }
+            currantWord = words[i];
+            if(currantWord.length()<=hand.size()){
+            //make currantWord into an ArrayList
+            ArrayList<Character> curWord = new ArrayList<Character>();
+            for (int j = 0; j < currantWord.length(); j++) {
+                curWord.add(currantWord.charAt(j));
+            }
+            curWord = sortAlphabetical(curWord);
+            //System.out.println(curWord);
+            while(curWord.size()<=tempHand.size()&&curWord.size()<0){
+            for (int j = 0; j < curWord.size(); j++) {
+                if(tempHand.get(j)==curWord.get(j)){
+                    c++;
+                }
+                else{
+                    tempHand.remove(j);
+                    j--;
                 }
             }
-            if (c == currantWord.length()) {
+        }
+            if (tempHand.equals(curWord)) {
+                //System.out.println(currantWord);
+                //potential.add(currantWord);
                 for (int l = 0; l < currantWord.length(); l++) {
                     if (currantWord.charAt(l) == a) {
-                        // System.out.println(currantWord);
+                        //System.out.println(currantWord);
                         potential.add(currantWord);
                     }
                 }
             }
         }
+            
+        }
+        //System.out.println(potential);
         String best = " ";
-        for (int i = 0; i < potential.size(); i++) {
-            if (getWordScore(potential.get(i)) >= getWordScore(best)) {
-                best = potential.get(i);
+        for (int p = 0; p < potential.size(); p++) {
+            if (getWordScore(potential.get(p)) >= getWordScore(best)&&(isLegal(potential.get(p),r,c,'v')||isLegal(potential.get(p),r,c,'h'))) {
+                best = potential.get(p);
             }
         }
         return best;
     }
+    public static ArrayList<Character> sortAlphabetical(ArrayList<Character> bob){
+        for (int i = 0; i < bob.size()-1; i++) {
+            for (int j = i+1; j < bob.size(); j++) {
+                if(bob.get(j)>=bob.get(i)){
+                    char q = bob.get(j);
+                    bob.remove(j);
+                    bob.add(i, q);
+                }
+            }
+        }
+        return bob;
+    }
+    public static void playTwo(){
+        startGame();
+        while (bag.size() > 0) {
+            if (turn) {
+                playerTwoTurn();
+                turn = false;
+            } else {
+                playerTurn();
+                turn = true;
+            }
+            boardToString();
+            System.out.println("Player one" + playerScore);
+            System.out.println("Player two " + playerTwoScore);
 
+        }
+        if (playerScore > playerTwoScore) {
+            System.out.println("You win!");
+        } else if (playerTwoScore >= playerScore) {
+            System.out.println("You lose!");
+        } else if (playerTwoScore == playerScore) {
+            System.out.println("Tis a tie!");
+        }
+    }
+    public static void playerTwoTurn(){
+        Scanner s = new Scanner(System.in);
+        String word;
+        String position;
+        String direction;
+        int row;
+        char col;
+        System.out.println("It is now player two's turn");
+        System.out.println("Here are your tiles " + playerTwoHand);
+        System.out.println("What word would you like to play?");
+        word = s.nextLine();
+        System.out.println("Where would you like to place the first letter of the word? Ex. h11");
+        position = s.nextLine();
+        if (position.length() == 2) {
+            row = position.charAt(1);
+            row = Character.getNumericValue(row);
+            col = position.charAt(0);
+        } else if (position.length() == 3) {
+            int rowOne = position.charAt(1);
+            rowOne = Character.getNumericValue(rowOne) * 10;
+            int rowTwo = position.charAt(2);
+            rowTwo = Character.getNumericValue(rowTwo);
+            row = rowOne + rowTwo;
+            col = position.charAt(0);
+        } else {
+            row = 0;
+            col = 0;
+            System.out.println(nah);
+            playerTwoTurn();
+        }
+        int c = Character.getNumericValue(col)-10;
+        System.out.println("What direction does your word go? Ex. v (for vertical) or h (for horizontal)");
+        direction = s.nextLine();
+        char d = direction.charAt(0);
+        if(isLegal(word, row, c, d)){
+            putOnBoard(word, row, c, d);
+            removeLetters(word);
+            drawLetters(word.length());
+        }
+        else{
+            row = 0;
+            col = 0;
+            System.out.println(nah);
+            playerTwoTurn();
+        }
+        turn = true;
+    }
     public static void main(String[] args) {
-        play();
+        // String word = "appltyz";
+        // char mu = 'e';
+        // ArrayList<Character> words = new ArrayList<Character>();
+        // for (int i = 0; i < word.length(); i++) {
+        //     words.add(word.charAt(i));   
+        // }
+        // System.out.println(unscrambleWord(words, mu, 0, 0));
+        //System.out.println(sortAlphabetical(words));
+        playTwo();
     }
 }
 
@@ -636,4 +762,7 @@ public class Scrabble {
  * 
  * compare the two scores
  * print winner
+ * 
+ * 
+ * Make IT Pretty
  */
